@@ -17,7 +17,7 @@ module.exports = {
             {
                 test: /\.less$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    MiniCssExtractPlugin.loader, // For prod, for dev - use style-loader
                     'css-loader',
                     'less-loader',
                     'typed-css-modules-loader'
