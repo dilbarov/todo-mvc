@@ -1,5 +1,5 @@
 import * as React from "react";
-import styles from './App.less';
+import './App.less';
 
 class App extends React.Component {
 
@@ -10,7 +10,7 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <div className={styles.label}>My React App! {`${this.handler()?.length}`}</div>
+                <div className={"label"}>My React App! {`${this.handler()?.length}`}</div>
             </div>
         );
     }
