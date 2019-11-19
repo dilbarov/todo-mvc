@@ -19,18 +19,13 @@ module.exports = {
                 use: [
                     MiniCssExtractPlugin.loader, // For prod, for dev - use style-loader
                     'css-loader',
-                    'less-loader',
-                    'typed-css-modules-loader'
+                    'less-loader'
                 ]
             },
             {
-                test: /\.ts(x?)$/,
+                test: /\.(ts|js)x?$/,
                 exclude: /node_modules/,
-                use: [
-                    {
-                        loader: "ts-loader"
-                    }
-                ]
+                loader: 'babel-loader',
             },
             {
                 enforce: "pre",
