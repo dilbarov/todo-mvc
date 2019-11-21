@@ -1,5 +1,4 @@
 const path = require("path");
-const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -21,7 +20,7 @@ module.exports = (env, argv) => (
         module: {
             rules: [
                 {
-                    test: /\.less$/,
+                    test: /\.(le|c)ss$/,
                     use: [
                         argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
                         'css-loader',
@@ -31,7 +30,7 @@ module.exports = (env, argv) => (
                 {
                     test: /\.(ts|js)x?$/,
                     exclude: /node_modules/,
-                    loader: 'babel-loader',
+                    use: ['babel-loader'],
                 },
                 {
                     enforce: "pre",

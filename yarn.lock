@@ -708,6 +708,12 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@skbkontur/react-icons@^3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@skbkontur/react-icons/-/react-icons-3.2.1.tgz#d102540406985bd6b5d5401251fc0d83e0c8a58e"
+  dependencies:
+    tslib "^1.9.2"
+
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
@@ -4646,7 +4652,7 @@ tough-cookie@~2.4.3:
     psl "^1.1.24"
     punycode "^1.4.1"
 
-tslib@^1.9.0:
+tslib@^1.9.0, tslib@^1.9.2:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
 
