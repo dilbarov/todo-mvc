@@ -39,24 +39,33 @@ class TodoItem extends React.Component<Props, State> {
         return (
             <>
                 <div key={item.id} className={`todo__item`}>
-                    <input className={"toggle"}
-                           type={"checkbox"}
-                           checked={item.completed}
-                           onChange={this.handleClickCompleted}/>
-                    <label className={`todo__item_label${this.props.item.completed ? "-complete" : ""}`}
-                           onDoubleClick={this.handleDoubleClick}>{item.desc}
-                    </label>
-                    <button className={"todo__item_delete"}
-                            onClick={() => deleteItem(item.id)}>
-                        <div className={"button__icon"}><DeleteIcon/></div>
-                    </button>
-                    <input className={`todo__item_input${isEdit ? "-edit" : ""}`}
-                           type="text"
-                           value={currentValue}
-                           onBlur={this.handleBlur}
-                           ref={item.id}
-                           onChange={this.handleChange}
-                           onKeyPress={e => this.handleKeyPress(e)}/>
+                    {
+                        !isEdit && <>
+                            <input className={"toggle"}
+                                   type={"checkbox"}
+                                   checked={item.completed}
+                                   onChange={this.handleClickCompleted}/>
+                            <label className={`todo__item_label${this.props.item.completed ? "-complete" : ""}`}
+                                   onDoubleClick={this.handleDoubleClick}>{item.desc}
+                            </label>
+                            <button className={"todo__item_delete"}
+                                    onClick={() => deleteItem(item.id)}>
+                                <div className={"button__icon"}><DeleteIcon/></div>
+                            </button>
+                        </>
+                    }
+
+                    {
+                        isEdit && <input className={`todo__item_input`}
+                                         type="text"
+                                         value={currentValue}
+                                         onBlur={this.handleBlur}
+                                         ref={item.id}
+                                         onChange={this.handleChange}
+                                         onKeyUp={e => this.handleKeyPress(e)}
+                        />
+                    }
+
                 </div>
 
             </>
@@ -72,6 +81,8 @@ class TodoItem extends React.Component<Props, State> {
             this.setState({isEdit: false})
         } else if (e.key === "Enter" && e.target.value === '') {
             this.props.deleteItem(this.props.item.id)
+        } else if (e.key === "Escape") {
+            this.setState({isEdit: false})
         }
     };
 
@@ -80,12 +91,12 @@ class TodoItem extends React.Component<Props, State> {
     };
 
     handleBlur = (e) => {
-        if (e.target.value !== '') {
+        if (e.target.value !== '' && this.state.isEdit) {
             let todo = this.props.item;
             todo.desc = this.state.currentValue;
             this.props.onEdit(todo);
             this.setState({isEdit: false});
-        } else {
+        } else if (e.target.value === '') {
             this.props.deleteItem(this.props.item.id)
         }
 
