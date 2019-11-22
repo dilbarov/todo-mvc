@@ -25,9 +25,11 @@ class TodoItem extends React.Component<Props, State> {
         currentValue: this.props.item.desc,
     };
 
+    private textInput = React.createRef<HTMLInputElement>();
+
     componentDidUpdate(prevProps, prevState) {
         if (!prevState.isEdit && this.state.isEdit) {
-            let todoInput = (ReactDOM.findDOMNode(this.refs[this.props.item.id]) as HTMLInputElement);
+            let todoInput = this.textInput.current;
             todoInput.focus();
             todoInput.setSelectionRange(todoInput.value.length, todoInput.value.length);
         }
@@ -60,7 +62,7 @@ class TodoItem extends React.Component<Props, State> {
                                          type="text"
                                          value={currentValue}
                                          onBlur={this.handleBlur}
-                                         ref={item.id}
+                                         ref={this.textInput}
                                          onChange={this.handleChange}
                                          onKeyUp={e => this.handleKeyPress(e)}
                         />
