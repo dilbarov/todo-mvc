@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as ReactDOM from 'react-dom';
 import './TodoItem.less';
 
 import DeleteIcon from "@skbkontur/react-icons/Delete";
@@ -43,10 +42,12 @@ class TodoItem extends React.Component<Props, State> {
                 <div key={item.id} className={`todo__item`}>
                     {
                         !isEdit && <>
-                            <input className={"toggle"}
-                                   type={"checkbox"}
-                                   checked={item.completed}
-                                   onChange={this.handleClickCompleted}/>
+                            <label className={"checkbox"}>
+                                <input type={"checkbox"}
+                                       checked={item.completed}
+                                       onChange={this.handleClickCompleted}/>
+                                <div className={"checkbox__text"}></div>
+                            </label>
                             <label className={`todo__item_label${this.props.item.completed ? "-complete" : ""}`}
                                    onDoubleClick={this.handleDoubleClick}>{item.desc}
                             </label>
@@ -64,7 +65,7 @@ class TodoItem extends React.Component<Props, State> {
                                          onBlur={this.handleBlur}
                                          ref={this.textInput}
                                          onChange={this.handleChange}
-                                         onKeyUp={e => this.handleKeyPress(e)}
+                                         onKeyUp={this.handleKeyPress}
                         />
                     }
 
