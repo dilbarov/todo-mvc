@@ -2,9 +2,25 @@
   position: relative;
   font-size: 24px;
   width: 550px;
+  border-bottom: 1px solid #E5E5E5;
   &_label {
     display: block;
     padding: 15px 15px 15px 60px;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: color 0.2s ease-out;
+    &-complete {
+      display: block;
+      padding: 15px 15px 15px 60px;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
+      color: #bdbdbd;
+      text-decoration: line-through;
+    }
   }
   &_input {
     position: absolute;
@@ -25,6 +41,7 @@
       }
     }
   }
+
   &_delete {
     background-color: transparent;
     border: none;
@@ -37,27 +54,35 @@
     height: 40px;
     width: 40px;
     transition: color 0.2s ease-out;
-    &:hover {
-      color: yellowgreen;
-    }
+    outline: 0;
+  }
+  &:hover button {
+    color: #af5b5e;
   }
 }
 
 .toggle {
-  text-align: center;
-  width: 40px;
-  height: auto;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("../../image/checkbox-off-512.png");
+  background-repeat: no-repeat;
+  border: none;
+  bottom: 0;
+  cursor: pointer;
+  height: 34px;
+  margin: auto 0 auto 11px;
   position: absolute;
   top: 0;
-  bottom: 0;
-  margin: auto 0;
-  border: none;
-  -webkit-appearance: none;
-  appearance: none;
+  text-align: center;
   outline:none;
+  width: 40px;
+  &:checked {
+    &:extend(.toggle);
+    background-image: url("../../image/checkbox-on-512.png");
+  }
 }
 
 .button__icon {
-  width: 20px;
+  width: 30px;
   margin: 0 auto;
 }
