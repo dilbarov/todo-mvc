@@ -3,6 +3,8 @@ import * as React from "react";
 import TodoItem from "../TodoItem";
 import './App.less';
 
+import cn from 'classnames';
+
 import ArrowChevronDownIcon from "@skbkontur/react-icons/ArrowChevronDown";
 
 interface State {
@@ -24,17 +26,17 @@ class App extends React.Component<{}, State> {
         const {isToggle, currentValue, todos} = this.state;
 
         return (
-            <div className={"app"}>
-                <div className={"label"}>todos</div>
-                <div className={"list"}>
-                    <div className={"header"}>
-                        <input className={"new__todo"} type="text" value={currentValue}
+            <div className={cn("app")}>
+                <div className={cn("label")}>todos</div>
+                <div className={cn("list")}>
+                    <div className={cn("header")}>
+                        <input className={cn("newTodo")} type="text" value={currentValue}
                                placeholder="What needs to be done?"
                                onKeyPress={this.handleKeyPress}
                                onChange={this.handleChange}/>
                         {
                             todos.length > 0 &&
-                            <div className={`toggle_all${isToggle ? "-active" : ""}`}
+                            <div className={cn('toggleAll', {active: isToggle})}
                                  onClick={this.handleToggle}>
                                 <ArrowChevronDownIcon/>
                             </div>
@@ -42,34 +44,34 @@ class App extends React.Component<{}, State> {
                     </div>
 
                     {
-                        todos.length > 0 && <div className={"todo"}>
+                        todos.length > 0 && <div className={cn("todo")}>
                             {
                                 todos.filter(item => this.todosFilter(item)).map(todo => (
                                     <TodoItem item={todo} deleteItem={this.deleteTodo} changeItem={this.changeTodo}
                                               key={todo.id} onEdit={this.changeTodo}/>
                                 ))
                             }
-                            <footer className={"todo__footer"}>
+                            <footer className={cn("todoFooter")}>
                                 <span
-                                    className={"todo_count"}>{this.getActiveItemsCount()} {`item${this.getActiveItemsCount() === 1 ? '' : 's'}`} left</span>
+                                    className={cn("todoCount")}>{this.getActiveItemsCount()} {`item${this.getActiveItemsCount() === 1 ? '' : 's'}`} left</span>
                                 <div className={"filter"}>
-                                    <a href="#/" className={this.state.currentFilter === 'All' ? "selected" : ''}
+                                    <a href="#/" className={cn({selected: this.state.currentFilter === 'All'})}
                                        data-target={"All"}
                                        onClick={this.handleClickFilter}>All</a>
                                     <a href="#/active"
-                                       className={this.state.currentFilter === 'Active' ? "selected" : ''}
+                                       className={cn({selected: this.state.currentFilter === 'Active'})}
                                        data-target={"Active"}
                                        onClick={this.handleClickFilter}>Active</a>
                                     <a href="#/completed"
-                                       className={this.state.currentFilter === 'Completed' ? "selected" : ''}
+                                       className={cn({selected: this.state.currentFilter === 'Completed'})}
                                        data-target={"Completed"}
                                        onClick={this.handleClickFilter}>Completed</a>
                                 </div>
-                                <div className={"todo_clear"}>
+                                <div className={cn("todoClear")}>
                                     {
                                         todos.filter(item => item.completed === true).length > 0 &&
                                         <button
-                                            className={"button__clear_completed"}
+                                            className={cn("buttonClearCompleted")}
                                             onClick={this.deleteCompleteTodos}
                                         >
                                             Clear completed
@@ -177,8 +179,6 @@ class App extends React.Component<{}, State> {
     getActiveItemsCount = () => {
         return this.state.todos.filter(item => item.active === true).length;
     }
-
 }
-
 
 export default App;

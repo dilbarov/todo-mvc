@@ -1,6 +1,8 @@
 import * as React from "react";
 import './TodoItem.less';
 
+import cn from 'classnames';
+
 import DeleteIcon from "@skbkontur/react-icons/Delete";
 
 interface Props {
@@ -39,27 +41,27 @@ class TodoItem extends React.Component<Props, State> {
         let {isEdit, currentValue} = this.state;
         return (
             <>
-                <div key={item.id} className={`todo__item`}>
+                <div key={item.id} className={cn('todoItem')}>
                     {
                         !isEdit && <>
-                            <label className={"checkbox"}>
+                            <label className={cn("checkbox")}>
                                 <input type={"checkbox"}
                                        checked={item.completed}
                                        onChange={this.handleClickCompleted}/>
-                                <div className={"checkbox__text"}></div>
+                                <div className={cn("checkboxText")} />
                             </label>
-                            <label className={`todo__item_label${this.props.item.completed ? "-complete" : ""}`}
+                            <label className={cn('todoItemLabel', {complete: this.props.item.completed})}
                                    onDoubleClick={this.handleDoubleClick}>{item.desc}
                             </label>
-                            <button className={"todo__item_delete"}
+                            <button className={cn("todoItemDeleteButton")}
                                     onClick={() => deleteItem(item.id)}>
-                                <div className={"button__icon"}><DeleteIcon/></div>
+                                <div className={cn("buttonIcon")}><DeleteIcon/></div>
                             </button>
                         </>
                     }
 
                     {
-                        isEdit && <input className={`todo__item_input`}
+                        isEdit && <input className={`todoItemInput`}
                                          type="text"
                                          value={currentValue}
                                          onBlur={this.handleBlur}
@@ -68,11 +70,8 @@ class TodoItem extends React.Component<Props, State> {
                                          onKeyUp={this.handleKeyPress}
                         />
                     }
-
                 </div>
-
             </>
-
         );
     }
 

@@ -1,65 +1,57 @@
-.todo__item {
+.todoItem {
     position: relative;
     font-size: 24px;
     min-height: 62px;
     width: 550px;
     border-bottom: 1px solid #E5E5E5;
 
-    &_label {
-        display: block;
-        padding: 15px 15px 15px 60px;
-        -moz-user-select: none;
-        -khtml-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-        //transition: color 0.2s ease-out;
-        transition: .2s;
-
-        &-complete {
-            display: block;
-            padding: 15px 15px 15px 60px;
-            -moz-user-select: none;
-            -khtml-user-select: none;
-            -webkit-user-select: none;
-            user-select: none;
-            color: #bdbdbd;
-            text-decoration: line-through;
-        }
-    }
-
-    &_input {
-        position: absolute;
-        border: 1px solid #999;
-        box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
-        padding: 14px 15px 14px 15px;
-        font-size: 24px;
-        font-family: inherit;
-        width: 474px;
-        top: 0;
-        right: 0;
-        &:focus {
-            outline: none;
-        }
-    }
-
-    &_delete {
-        background-color: transparent;
-        border: none;
-        color: transparent;
-        cursor: pointer;
-        position: absolute;
-        top: 50%;
-        transform: translate(0, -50%);
-        right: 10px;
-        height: 40px;
-        width: 40px;
-        transition: color 0.2s ease-out;
-        outline: 0;
-    }
-
     &:hover button {
         color: #af5b5e;
     }
+}
+
+.todoItemLabel {
+    display: block;
+    padding: 15px 15px 15px 60px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: .2s;
+}
+
+.todoItemInput {
+    position: absolute;
+    border: 1px solid #999;
+    box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+    padding: 14px 15px 14px 15px;
+    font-size: 24px;
+    font-family: inherit;
+    width: 474px;
+    top: 0;
+    right: 0;
+    &:focus {
+        outline: none;
+    }
+}
+
+.todoItemDeleteButton {
+    background-color: transparent;
+    border: none;
+    color: transparent;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    right: 10px;
+    height: 40px;
+    width: 40px;
+    transition: color 0.2s ease-out;
+    outline: 0;
+}
+
+.complete {
+    color: #bdbdbd;
+    text-decoration: line-through;
 }
 
 .checkbox input {
@@ -69,7 +61,7 @@
     margin: 15px 0 0 10px;
 }
 
-.checkbox__text {
+.checkboxText {
     cursor: pointer;
     position: absolute;
     top: 17px;
@@ -82,7 +74,7 @@
     transition: .2s;
 }
 
-.checkbox__text:before {
+.checkboxText:before {
     content: '';
     position: absolute;
     height: 2px;
@@ -94,7 +86,7 @@
     transition: background-color 0.2s ease-out;
 }
 
-.checkbox__text:after {
+.checkboxText:after {
     content: '';
     position: absolute;
     height: 2px;
@@ -106,16 +98,16 @@
     transition: background-color 0.2s ease-out;
 }
 
-.checkbox input:checked + .checkbox__text:before,
-.checkbox input:checked + .checkbox__text:after {
+.checkbox input:checked + .checkboxText:before,
+.checkbox input:checked + .checkboxText:after {
     background: green;
 }
 
-.checkbox input:checked + .checkbox__text {
+.checkbox input:checked + .checkboxText {
     border-color: green;
 }
 
-.button__icon {
+.buttonIcon {
     width: 30px;
     margin: 0 auto;
 }
