@@ -14,7 +14,7 @@ interface Item {
 
 interface Props {
     item: Item;
-    changeItem(any): void;
+    onChangeItem(update: Partial<Item>): void;
     onEdit(any): void;
     deleteItem(string): void;
 }
@@ -93,7 +93,7 @@ export class TodoItem extends React.Component<Props, State> {
         if (e.key === "Enter" && e.target.value !== "") {
             const todo = this.props.item;
             todo.desc = this.state.currentValue;
-            this.props.onEdit(todo);
+            this.props.onChangeItem({ desc: todo });
             this.setState({ isEdit: false });
         } else if (e.key === "Enter" && e.target.value === "") {
             this.props.deleteItem(this.props.item.id);
@@ -122,9 +122,6 @@ export class TodoItem extends React.Component<Props, State> {
     };
 
     public handleClickCompleted = (completed: boolean) => {
-        const { item } = this.props;
-        item.completed = completed;
-        item.active = !completed;
-        this.props.changeItem(item);
+        this.props.onChangeItem({ completed: completed });
     };
 }
