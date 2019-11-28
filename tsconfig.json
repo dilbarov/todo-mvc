@@ -1,14 +1,26 @@
 {
-  "compilerOptions": {
-    "outDir": "./dist/",
-    "module": "commonjs",
-    "target": "es6",
-    "sourceMap": true,
-    "jsx": "react"
-  },
-  "include": [
-    "./src/**/*.ts",
-    "./src/**/*.tsx",
-    "./typings/**/*.ts"
-  ]
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "module": "commonjs",
+        "target": "es6",
+        "sourceMap": true,
+        "jsx": "react",
+        "plugins": [
+            {
+                "name": "tslint-language-service",
+                "alwaysShowRuleFailuresAsWarnings": false,
+                "ignoreDefinitionFiles": true,
+                "configFile": "./tslint-webstorm-local.json",
+                "disableNoUnusedVariableRule": true,
+                "supressWhileTypeErrorsPresent": false,
+                "mockTypeScriptVersion": false
+            }
+        ]
+    },
+    "include": [
+        "./src/**/*.ts",
+        "./src/**/*.tsx",
+        "./stories/**/*.tsx",
+        "./typings/**/*.ts"
+    ]
 }
