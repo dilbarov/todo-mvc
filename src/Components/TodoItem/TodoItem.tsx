@@ -1,17 +1,12 @@
 import * as React from "react";
-import './TodoItem.less';
-
-import cn from 'classnames';
+import  cn from './TodoItem.less';
 
 import DeleteIcon from "@skbkontur/react-icons/Delete";
 
 interface Props {
     item: any;
-
     changeItem(any): void;
-
     onEdit(any): void;
-
     deleteItem(string): void;
 }
 
@@ -20,7 +15,7 @@ interface State {
     currentValue: string;
 }
 
-class TodoItem extends React.Component<Props, State> {
+export class TodoItem extends React.Component<Props, State> {
     state = {
         isEdit: false,
         currentValue: this.props.item.desc,
@@ -115,5 +110,3 @@ class TodoItem extends React.Component<Props, State> {
         this.props.changeItem(item);
     };
 }
-
-export default TodoItem;

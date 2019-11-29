@@ -22,8 +22,9 @@ module.exports = (env, argv) => (
                 {
                     test: /\.(le|c)ss$/,
                     use: [
+                        'classnames-loader',
                         argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
-                        'css-loader',
+                        {loader: "css-loader", options: {modules: true}},
                         'less-loader'
                     ]
                 },

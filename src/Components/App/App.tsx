@@ -1,9 +1,7 @@
 import * as React from "react";
+import {TodoItem} from "../TodoItem/TodoItem";
 
-import TodoItem from "../TodoItem";
-import './App.less';
-
-import cn from 'classnames';
+import cn from './App.less';
 
 import ArrowChevronDownIcon from "@skbkontur/react-icons/ArrowChevronDown";
 
@@ -14,7 +12,7 @@ interface State {
     currentFilter: string;
 }
 
-class App extends React.Component<{}, State> {
+export class App extends React.Component<{}, State> {
     state = {
         isToggle: false,
         todos: [],
@@ -180,5 +178,3 @@ class App extends React.Component<{}, State> {
         return this.state.todos.filter(item => item.active === true).length;
     }
 }
-
-export default App;
