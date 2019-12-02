@@ -4,6 +4,7 @@
   "arrowParens": "avoid",
   "singleQuote": false,
   "useTabs": false,
+  "printWidth": 120,
   "jsxBracketSameLine": true,
   "tabWidth": 4
 }

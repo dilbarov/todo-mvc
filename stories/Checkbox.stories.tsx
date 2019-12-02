@@ -5,13 +5,9 @@ import { Checkbox } from "../src/Components/Checkbox/Checkbox";
 
 export default { title: "Checkbox" };
 
-export const checked = () => (
-    <Checkbox checked={true} onClick={action("change")} />
-);
+export const checked = () => <Checkbox checked={true} onClick={action("change")} />;
 
-export const unchecked = () => (
-    <Checkbox checked={false} onClick={action("change")} />
-);
+export const unchecked = () => <Checkbox checked={false} onClick={action("change")} />;
 
 export const twoCheckboxes = () => (
     <div>
@@ -21,7 +17,7 @@ export const twoCheckboxes = () => (
 );
 
 export const stateFull = () => {
-    const [checked, change] = React.useState(false);
+    const [isChecked, change] = React.useState(false);
 
-    return <Checkbox checked={checked} onClick={() => change(!checked)} />;
+    return <Checkbox checked={isChecked} onClick={() => change(!isChecked)} />;
 };

@@ -1,39 +1,41 @@
-import * as React from "react";
 import { action } from "@storybook/addon-actions";
-import {TodoItem} from "../src/Components/TodoItem/TodoItem";
+import * as React from "react";
 
-export default {title: "TodoItem"};
+import { TodoItem } from "../src/Components/TodoItem/TodoItem";
 
-export const simpleItem = () => {
-    return (
-        <TodoItem value={{id: '123', description: "sadfsdf", completed: false}}
-                  onChange={() => {
-                      action("Change")
-                  }}
-                  onDelete={() => {
-                      action("Delete")
-                  }}/>
+export default { title: "TodoItem" };
 
-    )
-};
+export const simpleItem = () => (
+    <TodoItem
+        value={{ id: "123", description: "sadfsdf", completed: false }}
+        onChange={() => {
+            action("Change");
+        }}
+        onDelete={() => {
+            action("Delete");
+        }}
+    />
+);
 
-export const twoItem = () => {
-    return (
-        <>
-            <TodoItem value={{id: '123', description: "sadfsdf", completed: false}}
-                      onChange={() => {
-                          action("Change")
-                      }}
-                      onDelete={() => {
-                          action("Delete")
-                      }}/>
-            <TodoItem value={{id: '456', description: "sadasdfsdf", completed: false}}
-                      onChange={() => {
-                          action("Change")
-                      }}
-                      onDelete={() => {
-                          action("Delete")
-                      }}/>
-        </>
-    )
-};
+export const twoItem = () => (
+    <>
+        <TodoItem
+            value={{ id: "123", description: "sadfsdf", completed: false }}
+            onChange={() => {
+                action("Change");
+            }}
+            onDelete={() => {
+                action("Delete");
+            }}
+        />
+        <TodoItem
+            value={{ id: "456", description: "sadasdfsdf", completed: false }}
+            onChange={() => {
+                action("Change");
+            }}
+            onDelete={() => {
+                action("Delete");
+            }}
+        />
+    </>
+);

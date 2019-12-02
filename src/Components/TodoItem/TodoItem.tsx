@@ -1,7 +1,8 @@
 import * as React from "react";
-import cn from './TodoItem.less';
 
-import {Checkbox} from '../Checkbox/Checkbox'
+import { Checkbox } from "../Checkbox/Checkbox";
+
+import cn from "./TodoItem.less";
 
 interface Props {
     value: Item;
@@ -21,55 +22,56 @@ export interface Item {
 }
 
 export class TodoItem extends React.Component<Props, State> {
-    state: State = {
+    public state: State = {
         isEdit: false,
         currentValue: this.props.value.description,
     };
 
     private readonly textInput = React.createRef<HTMLInputElement>();
 
-    componentDidUpdate(prevProps: Props, prevState: State) {
+    public componentDidUpdate(prevProps: Props, prevState: State): void {
         if (!prevState.isEdit && this.state.isEdit) {
-            let todoInput = this.textInput.current;
+            const todoInput = this.textInput.current;
             todoInput.focus();
             todoInput.setSelectionRange(todoInput.value.length, todoInput.value.length);
         }
     }
 
-    render() {
-        let {description, completed, id} = this.props.value;
-        let {onDelete} = this.props;
-        let {isEdit, currentValue} = this.state;
+    public render(): JSX.Element {
+        const { description, completed, id } = this.props.value;
+        const { onDelete } = this.props;
+        const { isEdit, currentValue } = this.state;
         return (
-            <div key={id} className={cn('todoItem')}>
-                {
-                    !isEdit && <>
+            <div key={id} className={cn("todoItem")}>
+                {!isEdit && (
+                    <>
                         <div className={cn("indicator")}>
-                            <Checkbox
-                                checked={completed}
-                                onClick={this.handleClickCheckbox}
-                            />
+                            <Checkbox checked={completed} onClick={this.handleClickCheckbox} />
                         </div>
-                        <label className={cn('todoItemLabel', {complete: completed})}
-                               onDoubleClick={this.handleDoubleClick}>{description}
+                        <label
+                            className={cn("todoItemLabel", {
+                                complete: completed,
+                            })}
+                            onDoubleClick={this.handleDoubleClick}>
+                            {description}
                         </label>
-                        <button className={cn("todoItemDeleteButton")}
-                                onClick={() => onDelete()}>
-                            <div className={cn("buttonIcon")}/>
+                        <button className={cn("todoItemDeleteButton")} onClick={onDelete}>
+                            <div className={cn("buttonIcon")} />
                         </button>
                     </>
-                }
+                )}
 
-                {
-                    isEdit && <input className={cn(`todoItemInput`)}
-                                     type="text"
-                                     value={currentValue}
-                                     onBlur={this.handleBlur}
-                                     ref={this.textInput}
-                                     onChange={this.handleChange}
-                                     onKeyUp={this.handleKeyPress}
+                {isEdit && (
+                    <input
+                        className={cn(`todoItemInput`)}
+                        type="text"
+                        value={currentValue}
+                        onBlur={this.handleBlur}
+                        ref={this.textInput}
+                        onChange={this.handleChange}
+                        onKeyUp={this.handleKeyPress}
                     />
-                }
+                )}
             </div>
         );
     }
@@ -83,7 +85,7 @@ export class TodoItem extends React.Component<Props, State> {
     };
 
     private readonly handleChange = () => {
-        this.setState({currentValue: this.textInput.current.value})
+        this.setState({ currentValue: this.textInput.current.value });
     };
 
     private readonly handleBlur = () => {
@@ -95,23 +97,32 @@ export class TodoItem extends React.Component<Props, State> {
     };
 
     private readonly handleClickCheckbox = () => {
-        this.props.onChange({...this.props.value, completed: !this.props.value.completed});
+        this.props.onChange({
+            ...this.props.value,
+            completed: !this.props.value.completed,
+        });
     };
 
     private readonly beginEdit = () => {
-        this.setState({isEdit: true, currentValue: this.props.value.description});
+        this.setState({
+            isEdit: true,
+            currentValue: this.props.value.description,
+        });
     };
 
     private readonly completeEdit = () => {
-        this.setState({isEdit: false});
+        this.setState({ isEdit: false });
         if (this.state.currentValue) {
-            this.props.onChange({...this.props.value, description: this.state.currentValue});
+            this.props.onChange({
+                ...this.props.value,
+                description: this.state.currentValue,
+            });
         } else {
             this.props.onDelete();
         }
     };
 
     private readonly cancelEdit = () => {
-        this.setState({isEdit: false, currentValue: ""})
+        this.setState({ isEdit: false, currentValue: "" });
     };
 }
