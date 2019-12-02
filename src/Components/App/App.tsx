@@ -1,5 +1,5 @@
 import * as React from "react";
-import {TodoItem} from "../TodoItem/TodoItem";
+import {Item, TodoItem} from "../TodoItem/TodoItem";
 
 import cn from './App.less';
 
@@ -7,7 +7,7 @@ import ArrowChevronDownIcon from "@skbkontur/react-icons/ArrowChevronDown";
 
 interface State {
     isToggle: boolean;
-    todos: any;
+    todos: Array<Item>;
     currentValue: string;
     currentFilter: string;
 }
@@ -20,6 +20,8 @@ export class App extends React.Component<{}, State> {
         currentFilter: 'All'
     };
 
+    private readonly textInput = React.createRef<HTMLInputElement>();
+
     render() {
         const {isToggle, currentValue, todos} = this.state;
 
@@ -31,7 +33,8 @@ export class App extends React.Component<{}, State> {
                         <input className={cn("newTodo")} type="text" value={currentValue}
                                placeholder="What needs to be done?"
                                onKeyPress={this.handleKeyPress}
-                               onChange={this.handleChange}/>
+                               onChange={this.handleChange}
+                               ref={this.textInput}/>
                         {
                             todos.length > 0 &&
                             <div className={cn('toggleAll', {active: isToggle})}
@@ -44,30 +47,32 @@ export class App extends React.Component<{}, State> {
                     {
                         todos.length > 0 && <div className={cn("todo")}>
                             {
-                                todos.filter(item => this.todosFilter(item)).map(todo => (
-                                    <TodoItem item={todo} deleteItem={this.deleteTodo} changeItem={this.changeTodo}
-                                              key={todo.id} onEdit={this.changeTodo}/>
+                                todos.filter((item: Item) => this.todosFilter(item)).map((todo: Item) => (
+                                    <TodoItem id={todo.id}
+                                              description={todo.description}
+                                              completed={todo.completed}
+                                              deleteItem={this.deleteTodo}
+                                              changeItem={this.changeTodo}
+                                              key={todo.id}/>
                                 ))
                             }
                             <footer className={cn("todoFooter")}>
-                                <span
-                                    className={cn("todoCount")}>{this.getActiveItemsCount()} {`item${this.getActiveItemsCount() === 1 ? '' : 's'}`} left</span>
-                                <div className={"filter"}>
-                                    <a href="#/" className={cn({selected: this.state.currentFilter === 'All'})}
-                                       data-target={"All"}
+                                <span className={cn("todoCount")}>
+                                    {this.getActiveItemsCount()} {`item${this.getActiveItemsCount() === 1 ? '' : 's'}`} left
+                                </span>
+                                <div className={cn("filter")}>
+                                    <a href="#" className={cn({selected: this.state.currentFilter === 'All'})}
                                        onClick={this.handleClickFilter}>All</a>
-                                    <a href="#/active"
+                                    <a href="#"
                                        className={cn({selected: this.state.currentFilter === 'Active'})}
-                                       data-target={"Active"}
                                        onClick={this.handleClickFilter}>Active</a>
-                                    <a href="#/completed"
+                                    <a href="#"
                                        className={cn({selected: this.state.currentFilter === 'Completed'})}
-                                       data-target={"Completed"}
                                        onClick={this.handleClickFilter}>Completed</a>
                                 </div>
                                 <div className={cn("todoClear")}>
                                     {
-                                        todos.filter(item => item.completed === true).length > 0 &&
+                                        todos.filter((item: Item) => item.completed).length > 0 &&
                                         <button
                                             className={cn("buttonClearCompleted")}
                                             onClick={this.deleteCompleteTodos}
@@ -85,28 +90,28 @@ export class App extends React.Component<{}, State> {
     }
 
     deleteCompleteTodos = () => {
-        let todos = this.state.todos.filter(item => item.completed === false);
+        let todos = this.state.todos.filter((item: Item) => !item.completed);
         this.setState({todos});
     };
 
-    handleClickFilter = (e) => {
-        this.setState({currentFilter: e.target.dataset.target});
+    handleClickFilter = (e: React.MouseEvent) => {
+        this.setState({currentFilter: e.currentTarget.innerHTML});
     };
 
-    todosFilter = (item) => {
+    todosFilter = (item: Item) => {
         switch (this.state.currentFilter) {
             case "All":
                 return item;
             case "Active":
-                return item.active === true;
+                return !item.completed;
             case "Completed":
-                return item.completed === true;
+                return item.completed;
             default:
                 return item;
         }
     };
 
-    makeid = (length) => {
+    makeid = (length: number) => {
         let result = '';
         let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let charactersLength = characters.length;
@@ -116,17 +121,16 @@ export class App extends React.Component<{}, State> {
         return result;
     };
 
-    createTodo = (desc: string) => {
+    createTodo = (description: string) => {
         return {
-            desc: desc,
-            active: true,
+            description,
             completed: false,
             id: this.makeid(5)
         };
     };
 
-    handleKeyPress = (e) => {
-        if (e.key === "Enter" && e.target.value !== '') {
+    handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" && this.textInput.current.value) {
             let value = this.state.currentValue;
             let todos = this.state.todos;
             this.setState({currentValue: ''});
@@ -135,12 +139,12 @@ export class App extends React.Component<{}, State> {
         }
     };
 
-    handleChange = (e) => {
-        this.setState({currentValue: e.target.value});
+    handleChange = () => {
+        this.setState({currentValue: this.textInput.current.value});
     };
 
-    changeTodo = (todo) => {
-        let todos = this.state.todos.map(item => {
+    changeTodo = (todo: Item) => {
+        let todos = this.state.todos.map((item: Item) => {
             if (item.id === todo.id) {
                 item = todo;
             }
@@ -152,15 +156,14 @@ export class App extends React.Component<{}, State> {
 
     deleteTodo = (id) => {
         let {todos} = this.state;
-        todos = todos.filter(item => item.id !== id);
+        todos = todos.filter((item: Item) => item.id !== id);
         this.setState({todos});
         this.checkToggle(todos);
     };
 
     handleToggle = () => {
         let {isToggle} = this.state;
-        let todos = this.state.todos.map(item => {
-            item.active = isToggle;
+        let todos = this.state.todos.map((item: Item) => {
             item.completed = !isToggle;
             return item;
         });
@@ -168,13 +171,13 @@ export class App extends React.Component<{}, State> {
         this.checkToggle(todos);
     };
 
-    checkToggle = (todos) => {
-        let completedTodosCount = todos.filter(item => item.completed === true).length;
+    checkToggle = (todos: Array<Item>) => {
+        let completedTodosCount = todos.filter((item: Item) => item.completed).length;
         let todosCount = todos.length;
         this.setState({isToggle: (completedTodosCount === todosCount)});
     };
 
     getActiveItemsCount = () => {
-        return this.state.todos.filter(item => item.active === true).length;
+        return this.state.todos.filter((item: Item) => !item.completed).length;
     }
 }

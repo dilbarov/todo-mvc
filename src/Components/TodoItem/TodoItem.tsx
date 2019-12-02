@@ -1,12 +1,11 @@
 import * as React from "react";
 import  cn from './TodoItem.less';
 
+import {Checkbox} from '../Checkbox/Checkbox'
 import DeleteIcon from "@skbkontur/react-icons/Delete";
 
-interface Props {
-    item: any;
-    changeItem(any): void;
-    onEdit(any): void;
+interface Props extends Item{
+    changeItem(Item): void;
     deleteItem(string): void;
 }
 
@@ -15,15 +14,21 @@ interface State {
     currentValue: string;
 }
 
+export interface Item {
+    id: string;
+    completed: boolean;
+    description: string;
+}
+
 export class TodoItem extends React.Component<Props, State> {
-    state = {
+    state: State = {
         isEdit: false,
-        currentValue: this.props.item.desc,
+        currentValue: this.props.description,
     };
 
-    private textInput = React.createRef<HTMLInputElement>();
+    private readonly textInput = React.createRef<HTMLInputElement>();
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps: Props, prevState: State) {
         if (!prevState.isEdit && this.state.isEdit) {
             let todoInput = this.textInput.current;
             todoInput.focus();
@@ -32,31 +37,31 @@ export class TodoItem extends React.Component<Props, State> {
     }
 
     render() {
-        let {item, deleteItem} = this.props;
+        let {description, completed, id, deleteItem} = this.props;
         let {isEdit, currentValue} = this.state;
         return (
             <>
-                <div key={item.id} className={cn('todoItem')}>
+                <div key={id} className={cn('todoItem')}>
                     {
                         !isEdit && <>
-                            <label className={cn("checkbox")}>
-                                <input type={"checkbox"}
-                                       checked={item.completed}
-                                       onChange={this.handleClickCompleted}/>
-                                <div className={cn("checkboxText")} />
-                            </label>
-                            <label className={cn('todoItemLabel', {complete: this.props.item.completed})}
-                                   onDoubleClick={this.handleDoubleClick}>{item.desc}
+                            <div className={cn("indicator")}>
+                                <Checkbox
+                                    checked={completed}
+                                    onClick={this.handleClickCompleted}
+                                />
+                            </div>
+                            <label className={cn('todoItemLabel', {complete: completed})}
+                                   onDoubleClick={this.handleDoubleClick}>{description}
                             </label>
                             <button className={cn("todoItemDeleteButton")}
-                                    onClick={() => deleteItem(item.id)}>
-                                <div className={cn("buttonIcon")}><DeleteIcon/></div>
+                                    onClick={() => deleteItem(id)}>
+                                <div className={cn("buttonIcon")}></div>
                             </button>
                         </>
                     }
 
                     {
-                        isEdit && <input className={`todoItemInput`}
+                        isEdit && <input className={cn(`todoItemInput`)}
                                          type="text"
                                          value={currentValue}
                                          onBlur={this.handleBlur}
@@ -70,33 +75,32 @@ export class TodoItem extends React.Component<Props, State> {
         );
     }
 
-    handleKeyPress = (e) => {
-        if (e.key === "Enter" && e.target.value !== '') {
-            let todo = this.props.item;
-            todo.desc = this.state.currentValue;
-            this.props.onEdit(todo);
-            this.setState({isEdit: false})
-        } else if (e.key === "Enter" && e.target.value === '') {
-            this.props.deleteItem(this.props.item.id)
+    descriptionChange = () => {
+        let {completed, id} = this.props;
+        this.props.changeItem({completed, id, description: this.state.currentValue});
+        this.setState({isEdit: false})
+    };
+
+    handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" && this.textInput.current.value) {
+            this.descriptionChange();
+        } else if (e.key === "Enter" && !this.textInput.current.value) {
+            this.props.deleteItem(this.props.id)
         } else if (e.key === "Escape") {
-            this.setState({isEdit: false})
+            this.setState({isEdit: false, currentValue: this.props.description})
         }
     };
 
-    handleChange = (e) => {
-        this.setState({currentValue: e.target.value})
+    handleChange = () => {
+        this.setState({currentValue: this.textInput.current.value})
     };
 
-    handleBlur = (e) => {
-        if (e.target.value !== '' && this.state.isEdit) {
-            let todo = this.props.item;
-            todo.desc = this.state.currentValue;
-            this.props.onEdit(todo);
-            this.setState({isEdit: false});
-        } else if (e.target.value === '') {
-            this.props.deleteItem(this.props.item.id)
+    handleBlur = () => {
+        if (this.textInput.current.value && this.state.isEdit) {
+            this.descriptionChange();
+        } else if (!this.textInput.current.value) {
+            this.props.deleteItem(this.props.id)
         }
-
     };
 
     handleDoubleClick = () => {
@@ -104,9 +108,8 @@ export class TodoItem extends React.Component<Props, State> {
     };
 
     handleClickCompleted = () => {
-        let {item} = this.props;
-        item.completed = !item.completed;
-        item.active = !item.active;
-        this.props.changeItem(item);
+        let {description, id} = this.props;
+        let value: boolean = !this.props.completed;
+        this.props.changeItem({description, id, completed: value});
     };
 }
