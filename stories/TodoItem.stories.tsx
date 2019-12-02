@@ -6,12 +6,10 @@ export default {title: "Button"};
 
 export const simpleCase = () => {
     return (
-        <TodoItem id={"hgf"}
-                  description={"sdfsdf"}
-                  completed={false}
-                  changeItem={() => {
+        <TodoItem value={ {id: '123', description: "sadfsdf", completed: false } }
+                  onChange={() => {
                   }}
-                  deleteItem={() => {
+                  onDelete={() => {
                   }}/>
 
     )

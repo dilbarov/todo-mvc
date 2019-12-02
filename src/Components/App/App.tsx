@@ -48,17 +48,15 @@ export class App extends React.Component<{}, State> {
                         todos.length > 0 && <div className={cn("todo")}>
                             {
                                 todos.filter((item: Item) => this.todosFilter(item)).map((todo: Item) => (
-                                    <TodoItem id={todo.id}
-                                              description={todo.description}
-                                              completed={todo.completed}
-                                              deleteItem={this.deleteTodo}
-                                              changeItem={this.changeTodo}
+                                    <TodoItem value={todo}
+                                              onDelete={() => this.deleteTodo(todo.id)}
+                                              onChange={this.changeTodo}
                                               key={todo.id}/>
                                 ))
                             }
                             <footer className={cn("todoFooter")}>
                                 <span className={cn("todoCount")}>
-                                    {this.getActiveItemsCount()} {`item${this.getActiveItemsCount() === 1 ? '' : 's'}`} left
+                                    {this.getActiveItems().length} {`item${this.getActiveItems().length === 1 ? '' : 's'}`} left
                                 </span>
                                 <div className={cn("filter")}>
                                     <a href="#" className={cn({selected: this.state.currentFilter === 'All'})}
@@ -75,7 +73,7 @@ export class App extends React.Component<{}, State> {
                                         todos.filter((item: Item) => item.completed).length > 0 &&
                                         <button
                                             className={cn("buttonClearCompleted")}
-                                            onClick={this.deleteCompleteTodos}
+                                            onClick={this.deleteCompletedTodos}
                                         >
                                             Clear completed
                                         </button>
@@ -89,16 +87,15 @@ export class App extends React.Component<{}, State> {
         );
     }
 
-    deleteCompleteTodos = () => {
-        let todos = this.state.todos.filter((item: Item) => !item.completed);
-        this.setState({todos});
+    private readonly deleteCompletedTodos = () => {
+        this.setState({todos: this.getActiveItems()});
     };
 
-    handleClickFilter = (e: React.MouseEvent) => {
+    private readonly handleClickFilter = (e: React.MouseEvent) => {
         this.setState({currentFilter: e.currentTarget.innerHTML});
     };
 
-    todosFilter = (item: Item) => {
+    private readonly todosFilter = (item: Item) => {
         switch (this.state.currentFilter) {
             case "All":
                 return item;
@@ -111,7 +108,7 @@ export class App extends React.Component<{}, State> {
         }
     };
 
-    makeid = (length: number) => {
+    private readonly makeid = (length: number) => {
         let result = '';
         let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let charactersLength = characters.length;
@@ -121,7 +118,10 @@ export class App extends React.Component<{}, State> {
         return result;
     };
 
-    createTodo = (description: string) => {
+    private readonly createTodo = (description: string) => {
+        if (!description) {
+            return;
+        }
         return {
             description,
             completed: false,
@@ -129,55 +129,44 @@ export class App extends React.Component<{}, State> {
         };
     };
 
-    handleKeyPress = (e: React.KeyboardEvent) => {
-        if (e.key === "Enter" && this.textInput.current.value) {
-            let value = this.state.currentValue;
-            let todos = this.state.todos;
-            this.setState({currentValue: ''});
-            todos.push(this.createTodo(value));
-            this.checkToggle(todos);
+    private readonly updateTodoList = (todos: Array<Item>) => {
+        this.setState({currentValue: '', todos, isToggle: (todos.filter((item: Item) => item.completed).length === todos.length)});
+    };
+
+    private readonly handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            let todos = [...this.state.todos, this.createTodo(this.state.currentValue)];
+            this.updateTodoList(todos);
         }
     };
 
-    handleChange = () => {
+    private readonly handleChange = () => {
         this.setState({currentValue: this.textInput.current.value});
     };
 
-    changeTodo = (todo: Item) => {
+    private readonly changeTodo = (todo: Item) => {
         let todos = this.state.todos.map((item: Item) => {
             if (item.id === todo.id) {
                 item = todo;
             }
             return item;
         });
-        this.setState({todos});
-        this.checkToggle(todos);
+        this.updateTodoList(todos);
     };
 
-    deleteTodo = (id) => {
-        let {todos} = this.state;
-        todos = todos.filter((item: Item) => item.id !== id);
-        this.setState({todos});
-        this.checkToggle(todos);
+    private readonly deleteTodo = (id: string) => {
+        this.updateTodoList(this.state.todos.filter((item: Item) => item.id !== id));
     };
 
-    handleToggle = () => {
-        let {isToggle} = this.state;
+    private readonly handleToggle = () => {
         let todos = this.state.todos.map((item: Item) => {
-            item.completed = !isToggle;
+            item.completed = !this.state.isToggle;
             return item;
         });
-        this.setState({todos});
-        this.checkToggle(todos);
+        this.updateTodoList(todos);
     };
 
-    checkToggle = (todos: Array<Item>) => {
-        let completedTodosCount = todos.filter((item: Item) => item.completed).length;
-        let todosCount = todos.length;
-        this.setState({isToggle: (completedTodosCount === todosCount)});
-    };
-
-    getActiveItemsCount = () => {
-        return this.state.todos.filter((item: Item) => !item.completed).length;
+    private readonly getActiveItems = () => {
+        return this.state.todos.filter((item: Item) => !item.completed);
     }
 }
