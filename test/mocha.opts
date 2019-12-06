@@ -1,0 +1,2 @@
+--require @babel/polyfill
+--require test/setupBabelRegister.js
