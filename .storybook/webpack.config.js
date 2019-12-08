@@ -1,6 +1,7 @@
 const path = require("path");
 
 module.exports = ({ config }) => {
+    config.module.rules = [];
     config.module.rules.push(
         {
             test: /\.(le|c)ss$/,
