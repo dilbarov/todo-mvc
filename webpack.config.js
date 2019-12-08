@@ -20,7 +20,7 @@ module.exports = (env, argv) => (
         module: {
             rules: [
                 {
-                    test: /\.(le|c)ss$/,
+                    test: /\.less$/,
                     use: [
                         'classnames-loader',
                         argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
@@ -31,10 +31,21 @@ module.exports = (env, argv) => (
                 {
                     test: /\.(ts|js)x?$/,
                     exclude: /node_modules/,
-                    use: ['babel-loader'],
+                    use: ['babel-loader']
                 },
                 {
-                    test: /\.(png|jpe?g|gif)$/i,
+                    test: /\.css$/i,
+                    include: /react-ui/,
+                    use: [
+                        'style-loader',
+                        {
+                            loader: 'css-loader',
+                            options: {modules: "global"},
+                        }
+                    ],
+                },
+                {
+                    test: /\.(png|jpe?g|gif|svg|woff|woff2|eot)$/i,
                     use: [
                         {
                             loader: 'file-loader',

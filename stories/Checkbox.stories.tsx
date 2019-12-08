@@ -2,6 +2,7 @@ import { action } from "@storybook/addon-actions";
 import * as React from "react";
 
 import { Checkbox } from "../src/Components/Checkbox/Checkbox";
+import Button from "@skbkontur/react-ui/Button";
 
 export default { title: "Checkbox" };
 
@@ -13,6 +14,7 @@ export const twoCheckboxes = () => (
     <div>
         <Checkbox checked={true} onClick={action("change")} />
         <Checkbox checked={true} onClick={action("change")} />
+        <Button>asdasd</Button>
     </div>
 );
 
