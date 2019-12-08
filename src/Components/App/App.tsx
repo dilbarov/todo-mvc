@@ -22,6 +22,21 @@ export class App extends React.Component<{}, State> {
 
     private readonly input = React.createRef<HTMLInputElement>();
 
+    public componentDidMount(): void {
+        fetch(`https://api.jsonbin.io/b/5dea42a81c19843d88e7777c`, {
+            headers: {
+                "secret-key": "$2b$10$aEUSApP0na9yZX6MU7L.1.Ba4lbKDv9dgz0fs2HfeV2A.8w9Y7As.",
+            },
+        })
+            .then(res => res.json())
+            .then((data: Item[]) => {
+                this.setState({ todos: data });
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
     public render(): JSX.Element {
         const { isToggle, currentValue, todos } = this.state;
 
