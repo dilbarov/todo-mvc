@@ -1,7 +1,8 @@
-import ArrowChevronDownIcon from "@skbkontur/react-icons/ArrowChevronDown";
 import * as React from "react";
 
-import { Item, TodoItem } from "../TodoItem/TodoItem";
+import ArrowChevronDownIcon from "@skbkontur/react-icons/ArrowChevronDown";
+
+import {Item, TodoItem} from "../TodoItem/TodoItem";
 
 import cn from "./App.less";
 
@@ -11,6 +12,17 @@ interface State {
     currentValue: string;
     currentFilter: string;
 }
+
+interface dataItems {
+    items: Item[];
+}
+
+const OPTIONS = {
+    headers: {
+        "Content-Type": "application/json",
+        "secret-key": "$2b$10$aEUSApP0na9yZX6MU7L.1.Ba4lbKDv9dgz0fs2HfeV2A.8w9Y7As.",
+    },
+};
 
 export class App extends React.Component<{}, State> {
     public state: State = {
@@ -22,23 +34,13 @@ export class App extends React.Component<{}, State> {
 
     private readonly input = React.createRef<HTMLInputElement>();
 
-    public componentDidMount(): void {
-        fetch(`https://api.jsonbin.io/b/5dea42a81c19843d88e7777c`, {
-            headers: {
-                "secret-key": "$2b$10$aEUSApP0na9yZX6MU7L.1.Ba4lbKDv9dgz0fs2HfeV2A.8w9Y7As.",
-            },
-        })
-            .then(res => res.json())
-            .then((data: Item[]) => {
-                this.setState({ todos: data });
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
+    public componentDidMount = async (): Promise<void> => {
+        let todos = await this.getTodos();
+        this.setState({todos})
+    };
 
     public render(): JSX.Element {
-        const { isToggle, currentValue, todos } = this.state;
+        const {isToggle, currentValue, todos} = this.state;
 
         return (
             <div className={cn("app")}>
@@ -60,7 +62,7 @@ export class App extends React.Component<{}, State> {
                                     active: isToggle,
                                 })}
                                 onClick={this.handleToggle}>
-                                <ArrowChevronDownIcon />
+                                <ArrowChevronDownIcon/>
                             </div>
                         )}
                     </div>
@@ -80,7 +82,7 @@ export class App extends React.Component<{}, State> {
                             <footer className={cn("todoFooter")}>
                                 <span className={cn("todoCount")}>
                                     {`${this.getActiveItems().length} item${this.getActiveItems().length === 1 &&
-                                        "s"} left`}
+                                    "s"} left`}
                                 </span>
                                 <div className={cn("filter")}>
                                     <a
@@ -125,12 +127,24 @@ export class App extends React.Component<{}, State> {
         );
     }
 
-    private readonly deleteCompletedTodos = () => {
-        this.setState({ todos: this.getActiveItems() });
+    private readonly getTodos = async (): Promise<Item[]> => {
+        try {
+            const response = await fetch(`https://api.jsonbin.io/b/5dea42a81c19843d88e7777c/latest`, {...OPTIONS});
+            const data = await response.json() as dataItems;
+            return data.items;
+        } catch (e) {
+            return [];
+        }
+    };
+
+    private readonly deleteCompletedTodos = async () => {
+        let todos = this.getActiveItems();
+        this.setState({todos});
+        await this.updateTodoList(todos);
     };
 
     private readonly handleClickFilter = (e: React.MouseEvent) => {
-        this.setState({ currentFilter: e.currentTarget.innerHTML });
+        this.setState({currentFilter: e.currentTarget.innerHTML});
     };
 
     private readonly todosFilter = (item: Item) => {
@@ -162,45 +176,46 @@ export class App extends React.Component<{}, State> {
         id: this.makeid(5),
     });
 
-    private readonly updateTodoList = (todos: Item[]) => {
+    private readonly updateTodoList = async (todos: Item[]): Promise<void> => {
         this.setState({
             currentValue: "",
             todos: todos,
             isToggle: todos.filter((item: Item) => item.completed).length === todos.length,
         });
+        await fetch(`https://api.jsonbin.io/b/5dea42a81c19843d88e7777c`, {...OPTIONS, body: JSON.stringify({items: todos}), method: "PUT"});
     };
 
-    private readonly handleKeyPress = (e: React.KeyboardEvent) => {
+    private readonly handleKeyPress = async (e: React.KeyboardEvent) => {
         if (e.key === "Enter" && this.state.currentValue) {
             const todos = [...this.state.todos, this.createTodo(this.state.currentValue)];
-            this.updateTodoList(todos);
+            await this.updateTodoList(todos);
         }
     };
 
     private readonly handleChange = () => {
-        this.setState({ currentValue: this.input.current.value });
+        this.setState({currentValue: this.input.current.value});
     };
 
-    private readonly changeTodo = (todo: Item) => {
+    private readonly changeTodo = async (todo: Item) => {
         const todos = this.state.todos.map((item: Item) => {
             if (item.id === todo.id) {
                 return todo;
             }
             return item;
         });
-        this.updateTodoList(todos);
+        await this.updateTodoList(todos);
     };
 
-    private readonly deleteTodo = (id: string) => {
-        this.updateTodoList(this.state.todos.filter((item: Item) => item.id !== id));
+    private readonly deleteTodo = async (id: string) => {
+        await this.updateTodoList(this.state.todos.filter((item: Item) => item.id !== id));
     };
 
-    private readonly handleToggle = () => {
+    private readonly handleToggle = async () => {
         const todos = this.state.todos.map((item: Item) => {
             item.completed = !this.state.isToggle;
             return item;
         });
-        this.updateTodoList(todos);
+        await this.updateTodoList(todos);
     };
 
     private readonly getActiveItems = () => this.state.todos.filter((item: Item) => !item.completed);

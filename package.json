@@ -20,6 +20,7 @@
     "@babel/plugin-proposal-numeric-separator": "^7.2.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
+    "@babel/plugin-transform-runtime": "^7.7.6",
     "@babel/polyfill": "^7.7.0",
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-react": "^7.7.0",
@@ -42,22 +43,23 @@
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.8.0",
     "mocha": "^6.2.2",
+    "prettier": "^1.19.1",
     "source-map-loader": "^0.2.4",
     "style-loader": "^1.0.0",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-language-service": "^0.9.9",
+    "tslint-plugin-prettier": "^2.0.1",
+    "tslint-teamcity-reporter": "^3.2.2",
     "typescript": "^3.7.2",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
+    "@babel/runtime": "^7.7.6",
     "@skbkontur/react-icons": "^3.2.1",
-    "prettier": "^1.19.1",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-language-service": "^0.9.9",
-    "tslint-plugin-prettier": "^2.0.1",
-    "tslint-teamcity-reporter": "^3.2.2"
+    "react-dom": "^16.12.0"
   }
 }
